@@ -1,0 +1,636 @@
+﻿<Window x:Class="Organiser.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Organiser"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+        
+        Title="Нота" Height="713" Width="825" WindowState="Maximized"
+        >
+    <Window.Resources>
+
+        <!--Модель-->
+        <local:Problem x:Key="ProblemsClass"/>
+        <!--Модель представления-->
+        <local:ProblemViewModel x:Key="PVM"/>
+
+
+        <Style TargetType="{x:Type DataGrid}">
+            <Setter Property="ColumnHeaderStyle" Value="{DynamicResource ColumnHeaderStyle1}"/>
+            <Setter Property="RowHeaderStyle" Value="{DynamicResource RowHeaderStyle1}"/>
+            <Setter Property="RowStyle" Value="{DynamicResource DataGridRowStyle1}"/>
+            <Setter Property="CellStyle" Value="{StaticResource DataGridCellStyle1}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="{x:Null}"/>
+            <Setter Property="HeadersVisibility" Value="None"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="IsReadOnly" Value="False"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Hidden"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Hidden"/>
+            <Setter Property="CanUserAddRows" Value="True"/>
+            <Setter Property="CanUserDeleteRows" Value="True"/>
+        </Style>
+
+        <Style TargetType="{x:Type ComboBox}">
+            <Setter Property="Background" Value="#FF606873"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="#FF606873"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundStaticBrush}"/>
+            <Setter Property="Margin" Value="15,0,2,0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Foreground" Value="#FF646464"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Background" Value="{x:Null}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForeGroundMy}"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontWeight" Value="Light"/>
+        </Style>
+
+    </Window.Resources>
+    
+    <Window.DataContext>
+        <Binding Source="{StaticResource PVM}"/>
+    </Window.DataContext>
+
+
+    <Window.Triggers>
+
+        <!--Разворот при выборе повторения. Триггер привязан к чекбосу checkReplay через SourceName -->
+        <EventTrigger SourceName="checkReplay" RoutedEvent="CheckBox.Checked">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="WrapProperty" Storyboard.TargetProperty="Height"
+                                     From="0" To="{Binding ElementName=WrapProperty, Path=MaxHeight}" Duration="0:0:0.25"
+                                     >                        
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+        <EventTrigger SourceName="checkReplay" RoutedEvent="CheckBox.Unchecked">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="WrapProperty" Storyboard.TargetProperty="Height"
+                                     From="{Binding ElementName=WrapProperty, Path=ActualHeight}" To="0" Duration="0:0:0.25"
+                                     >
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+        <!--////////////////////////////////////////////////////-->
+        
+        <!--При выборе Каждую неделю-->
+        <EventTrigger SourceName="RadioEveryweek" RoutedEvent="RadioButton.Checked">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="StackEveryweek" Storyboard.TargetProperty="Height"
+                                     From="0" To="20" Duration="0:0:0.25"
+                                     >
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+        <EventTrigger SourceName="RadioEveryweek" RoutedEvent="RadioButton.Unchecked">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="StackEveryweek" Storyboard.TargetProperty="Height"
+                                     From="{Binding ElementName=StackEveryWeek, Path=ActualHeight}" To="0" Duration="0:0:0.25"
+                                     >
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+        <!--////////////////////////////////////////////////////-->
+
+        <!--Окончание повторения. При выборе Количество повторий-->
+        <EventTrigger SourceName="RadioCountReplay" RoutedEvent="RadioButton.Checked">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="TxBxCountReplay" Storyboard.TargetProperty="Width"
+                                     From="0" To="90" Duration="0:0:0.25"
+                                     >
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+        <EventTrigger SourceName="RadioCountReplay" RoutedEvent="RadioButton.Unchecked">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="TxBxCountReplay" Storyboard.TargetProperty="Width"
+                                     From="90" To="0" Duration="0:0:0.25"
+                                     >
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+        <!--////////////////////////////////////////////////////-->
+
+        <!--Окончание повторения. При выборе Дата-->
+        <EventTrigger SourceName="RadioDate" RoutedEvent="RadioButton.Checked">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="DatPick" Storyboard.TargetProperty="Width"
+                                     From="0" To="110" Duration="0:0:0.25"
+                                     >
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+        <EventTrigger SourceName="RadioDate" RoutedEvent="RadioButton.Unchecked">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="DatPick" Storyboard.TargetProperty="Width"
+                                     From="140" To="0" Duration="0:0:0.25"
+                                     >
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+        <!--////////////////////////////////////////////////////-->
+
+        <!--Задать интервал-->
+        <EventTrigger SourceName="RadioOther" RoutedEvent="RadioButton.Checked">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="TxBxSetInterval" Storyboard.TargetProperty="Width"
+                                     From="0" To="200" Duration="0:0:0.25"
+                                     >
+                    </DoubleAnimation>
+                    <DoubleAnimation Storyboard.TargetName="TxBxSetInterval" Storyboard.TargetProperty="Height"
+                                     From="0" To="25" Duration="0:0:0.25"
+                                     >
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+        <EventTrigger SourceName="RadioOther" RoutedEvent="RadioButton.Unchecked">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="TxBxSetInterval" Storyboard.TargetProperty="Width"
+                                     From="200" To="0" Duration="0:0:0.25"
+                                     >
+                    </DoubleAnimation>
+                    <DoubleAnimation Storyboard.TargetName="TxBxSetInterval" Storyboard.TargetProperty="Height"
+                                     From="25" To="0" Duration="0:0:0.25"
+                                     >
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+        <!--////////////////////////////////////////////////////-->
+    </Window.Triggers>
+
+
+    <Grid Background="{StaticResource BacgroundGridBack}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="37*"/>
+            <ColumnDefinition Width="443*"/>
+            <ColumnDefinition Width="37*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="1" Orientation="Horizontal">
+            
+            <!--Список заданий-->
+            <DataGrid x:Name="DataGridSpisok" AutoGenerateColumns="False" Language="ru-RU"
+                      Width="Auto"
+                      Margin="5"
+                      ItemsSource="{Binding Path=ProblemsObs}" 
+                      SelectedItem="{Binding Path=SelectedProblem}"
+                      CanUserAddRows="False"
+                      RowDetailsVisibilityMode="VisibleWhenSelected"
+                      >
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="AliceBlue" BorderThickness="0.5" Margin="0" Width="380">
+                                    <StackPanel Margin="15">
+                                        <TextBlock Foreground="#FFD4E5FF" FontSize="15" 
+                                                   Text="{Binding Path=NextDateTime, StringFormat={}{0:d MMMM yyyy  dddd    HH:mm:ss}}"
+                                                   ></TextBlock>
+                                        <TextBlock Foreground="#FFC5FFC5" Text="{Binding Path=MessageText}" TextWrapping="Wrap"></TextBlock>
+                                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                            <Button Height="15" Width="15" Margin="5,0,0,0"
+                                                    Style="{StaticResource ButtonMy}" 
+                                                    Command="{Binding Path=DataContext.RemoveProblemCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                                    >x</Button>
+                                            <Button Height="15" Width="15" Margin="5,0,0,0"
+                                                    Style="{StaticResource ButtonMy}" 
+                                                    CommandParameter="{Binding}"
+                                                    Command="{Binding Path=DataContext.EditProblemComand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                                    >E</Button>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+                
+                <DataGrid.RowDetailsTemplate>
+                    <DataTemplate>
+                        <Border MaxWidth="{Binding ElementName=DataGridSpisok, Path=ActualWidth}" Margin="5">
+                            <TextBlock Text="{Binding Path=SummaryProb}"
+                                       Foreground="White"
+                                       FontSize="11" 
+                                       TextWrapping="Wrap"
+                                       ></TextBlock>
+                        </Border>
+                    </DataTemplate>
+                </DataGrid.RowDetailsTemplate>
+            </DataGrid>
+        </StackPanel>
+        
+        <!--Параметры задания-->
+
+        <Border Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="1"
+                Style="{StaticResource BorderStyle}" 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Top">
+            <Grid x:Name="BorderTaskDetails" DataContext="{Binding Path=SourceProblem}"
+                  >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                    
+                <Grid.Resources>
+                    <sys:Double x:Key="fonSizeBig">25</sys:Double>
+                    <sys:Double x:Key="fontSizeMidl">15</sys:Double>
+                    <sys:Double x:Key="fontSizeLitl">12</sys:Double>
+                    <sys:Double x:Key="heightButton">15</sys:Double>
+                        
+                    <Style TargetType="CheckBox">
+                        <Setter Property="FontFamily" Value="{StaticResource FontFamilyMy}"></Setter>
+                        <Setter Property="Foreground" Value="{StaticResource ForeGroundMy}"></Setter>
+                        <Setter Property="FontWeight" Value="Light"></Setter>
+                    </Style>
+                </Grid.Resources>
+                    
+                    
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        
+                    </Grid.RowDefinitions>
+                        
+                    <!--Date, Text Task-->
+                    <Grid x:Name="WrapCalendar">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="250"></RowDefinition>
+                            <RowDefinition Height="162"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <!--Calendar-->
+                        <Calendar x:Name="CalendPopup" 
+                                    Margin="5" 
+                                    Style="{StaticResource CalendarMy}"
+                                    SelectedDate="{Binding Path=StartDate, Mode=TwoWay}"
+                                    ></Calendar>
+                            
+                        <!--Text Task-->
+                        <TextBox x:Name="LLL_Test" Grid.Row="1"
+                                 Style="{StaticResource TimeUpDownTextBox}"
+                                    FontSize="{StaticResource fontSizeMidl}"
+                                    HorizontalContentAlignment="Left"
+                                    VerticalContentAlignment="Top"
+                                    TextWrapping="Wrap"
+                                    Margin="6"
+                                    MaxWidth="{Binding ElementName=CalendPopup, Path=ActualWidth}"
+                                    MaxHeight="{Binding ElementName=WrapCalendar, Path=ActualHeight}"
+                                    Height="150"
+                                    Text="{Binding Path=MessageText, Mode=TwoWay, TargetNullValue=Введите текст задания.}">
+                        </TextBox>
+                            
+                    </Grid>
+                        
+                    <!--Parametr Task-->
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                            
+                        <!--ДАТА-->
+                        <TextBox x:Name="TextBlockDate" Style="{StaticResource TextboxStyle}"
+                                    HorizontalContentAlignment="Center"
+                                    FontSize="{StaticResource fonSizeBig}" 
+                                    Margin="{Binding ElementName=CalendPopup, Path=Margin}"
+                                    Text="{Binding ElementName=CalendPopup, Path=SelectedDate, StringFormat={}{0:dd.MM.yyyy}}"
+                                    VerticalContentAlignment="Center"
+                                    IsReadOnly="True"
+                                    ></TextBox>
+
+                        <!--TIME ЧАСЫ С КНОПКАМИ ИЗ СТРЕЛОК-->
+                        <Grid Width="Auto" HorizontalAlignment="Center" Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.Resources>
+                                <sys:Int32 x:Key="MaxLen">2</sys:Int32>
+                                <sys:Double x:Key="MinWidthClock">35</sys:Double>
+                            </Grid.Resources>
+                            <TextBox x:Name="tbx_hour" 
+                                        Grid.Row="1"
+                                        Text="{Binding Path=StartHour, Mode=TwoWay, StringFormat={}{0:00}}"
+                                        Height="{StaticResource MinWidthClock}"
+                                        MinWidth="{StaticResource MinWidthClock}"
+                                        MaxLength="{StaticResource MaxLen}"
+                                        FontSize="{StaticResource fonSizeBig}"
+                                        Style="{StaticResource TimeUpDownTextBox}"></TextBox>
+
+                            <TextBox x:Name="tbx_minute" 
+                                        Grid.Column="2" Grid.Row="1"
+                                        Text="{Binding Path=StartMinute, Mode=TwoWay, StringFormat={}{0:00}}"
+                                        Height="{StaticResource MinWidthClock}"
+                                        MinWidth="{StaticResource MinWidthClock}"
+                                        MaxLength="{StaticResource MaxLen}"
+                                        FontSize="{StaticResource fonSizeBig}"
+                                        Style="{StaticResource TimeUpDownTextBox}"></TextBox>
+
+                            <TextBox x:Name="tbx_sec" 
+                                        Grid.Column="4" Grid.Row="1"
+                                        Text="{Binding Path=StartSecond, Mode=TwoWay, StringFormat={}{0:00}}"
+                                        Height="{StaticResource MinWidthClock}"
+                                        MinWidth="{StaticResource MinWidthClock}"
+                                        MaxLength="{StaticResource MaxLen}"
+                                        FontSize="{StaticResource fonSizeBig}"
+                                        Style="{StaticResource TimeUpDownTextBox}"></TextBox>
+                                
+                            <Label Margin="0" Grid.Row="1" Grid.Column="1"
+                                        Padding="0"
+                                        FontSize="{StaticResource fonSizeBig}" VerticalContentAlignment="Center" 
+                                    HorizontalContentAlignment="Center" 
+                                    Foreground="White"
+                                    Background="{StaticResource BackgroundElement}"
+                                        >:</Label>
+
+                            <Label Margin="0" Grid.Row="1" Grid.Column="3"
+                                        Padding="0"
+                                        FontSize="{StaticResource fonSizeBig}" VerticalContentAlignment="Center" 
+                                    HorizontalContentAlignment="Center" 
+                                    Foreground="White"
+                                    Background="{StaticResource BackgroundElement}"
+                                        >:</Label>
+
+                        </Grid>
+
+                        <!--Настройки повторения-->
+                        <Grid Grid.Row="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <StackPanel Margin="5,15,0,0" Orientation="Horizontal">
+                                <CheckBox x:Name="checkReplay"
+                                    FontSize="{StaticResource fontSizeMidl}"
+                                    IsChecked="{Binding Path=Replay, Mode=OneWayToSource}"
+                                    Content="Повторять"
+                                    >
+                                </CheckBox>
+                                <CheckBox x:Name="checkSpeek"
+                                        Margin="25,0,0,0" 
+                                        FontSize="{StaticResource fontSizeMidl}"
+                                        IsChecked="{Binding Path=Speek, Mode=OneWayToSource}"
+                                        Content="Озвучивать"
+                                        >
+                                </CheckBox>
+                            </StackPanel>
+
+                            <StackPanel x:Name="WrapProperty" Grid.Row="1"
+                                    Height="0"
+                                    MinWidth="300"
+                                    MaxHeight="260"
+                                    Orientation="Vertical" 
+                                    HorizontalAlignment="Left"
+                                    Margin="15,5,0,0">
+                                <StackPanel.Resources>
+                                    <Style TargetType="RadioButton">
+                                        <Setter Property="Foreground" Value="{StaticResource ForeGroundMy}"></Setter>
+                                        <Setter Property="FontSize" Value="{StaticResource fontSizeLitl}"></Setter>
+                                        <Setter Property="FontFamily" Value="{StaticResource FontFamilyMy}"></Setter>
+                                        <Setter Property="FontWeight" Value="Light"></Setter>
+                                        <Setter Property="Margin" Value="1.5"></Setter>
+                                    </Style>
+                                </StackPanel.Resources>
+
+                                <RadioButton x:Name="RadioEveryday" 
+                                            IsChecked="{Binding Path=ReplayEveryday, Mode=TwoWay}"
+                                            >Каждый день</RadioButton>
+                                <RadioButton x:Name="RadioEveryweek"
+                                            IsChecked="{Binding Path=ReplayEveryweek, Mode=TwoWay}"
+                                            >Каждую неделю</RadioButton>
+                                <StackPanel x:Name="StackEveryweek" Height="0" MaxHeight="20" Orientation="Horizontal">
+                                    <CheckBox FontSize="{StaticResource fontSizeLitl}" Margin="10,2,0,2"
+                                            IsChecked="{Binding Path=Monday, Mode=TwoWay}"
+                                            >Пн</CheckBox>
+                                    <CheckBox FontSize="{StaticResource fontSizeLitl}" Margin="3,2,0,2"
+                                            IsChecked="{Binding Path=Tuesday, Mode=TwoWay}"
+                                            >Вт</CheckBox>
+                                    <CheckBox FontSize="{StaticResource fontSizeLitl}" Margin="3,2,0,2"
+                                            IsChecked="{Binding Path=Wednesday, Mode=TwoWay}"
+                                            >Ср</CheckBox>
+                                    <CheckBox FontSize="{StaticResource fontSizeLitl}" Margin="3,2,0,2"
+                                            IsChecked="{Binding Path=Thursday, Mode=TwoWay}"
+                                            >Чт</CheckBox>
+                                    <CheckBox FontSize="{StaticResource fontSizeLitl}" Margin="3,2,0,2"
+                                            IsChecked="{Binding Path=Friday, Mode=TwoWay}"
+                                            >Пт</CheckBox>
+                                    <CheckBox FontSize="{StaticResource fontSizeLitl}" Foreground="Red" Margin="3,2,0,2"
+                                            IsChecked="{Binding Path=Saturday, Mode=TwoWay}"
+                                            >Сб</CheckBox>
+                                    <CheckBox FontSize="{StaticResource fontSizeLitl}" Foreground="Red" Margin="3,2,0,2"
+                                            IsChecked="{Binding Path=Sunday, Mode=TwoWay}"
+                                            >Вс</CheckBox>
+                                </StackPanel>
+                                <RadioButton x:Name="RadioEverymonth"
+                                            IsChecked="{Binding Path=ReplayEverymonth, Mode=TwoWay}"
+                                            >Каждый месяц</RadioButton>
+                                <RadioButton x:Name="RadioEveryyear"
+                                            IsChecked="{Binding Path=ReplaysEveryyear, Mode=TwoWay}"
+                                            >Каждый год</RadioButton>
+                                <RadioButton x:Name="RadioOther"
+                                            IsChecked="{Binding Path=ReplayOther, Mode=TwoWay}"
+                                            >Задать интервал</RadioButton>
+                                <TextBox x:Name="TxBxSetInterval" Style="{StaticResource TextboxStyle}"
+                                        Text="{Binding Path=Interval, Mode=TwoWay}"
+                                        VerticalContentAlignment="Center"
+                                        HorizontalAlignment="Left"
+                                        Height="0"
+                                        Width="0"
+                                        Margin="10,0,0,0"
+                                        ></TextBox>
+                                <Separator Height="5"></Separator>
+
+                                <!--Окончание повторения-->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock FontSize="{StaticResource fontSizeMidl}">Окончание повторения:</TextBlock>
+                                    <RadioButton FontSize="{StaticResource fontSizeLitl}"
+                                                Grid.Row="1"
+                                                IsChecked="{Binding Path=EndingNever, Mode=TwoWay}"
+                                            >Никогда</RadioButton>
+                                    <RadioButton x:Name="RadioCountReplay" FontSize="{StaticResource fontSizeLitl}"
+                                                Grid.Row="2"
+                                                IsChecked="{Binding Path=EndingCount, Mode=TwoWay}"
+                                                >Количество повторений</RadioButton>
+                                    <TextBox x:Name="TxBxCountReplay" Grid.Column="1" Grid.Row="2" 
+                                            Background="{StaticResource BackgroundElement}"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource fontSizeLitl}"
+                                            Style="{StaticResource TimeUpDownTextBox}"
+                                            Width="0"
+                                            MaxLength="10"
+                                            Text="{Binding Path=CountReplays,Mode=TwoWay}"
+                                            ></TextBox>
+                                    <RadioButton x:Name="RadioDate" FontSize="{StaticResource fontSizeLitl}"
+                                                Grid.Row="3"
+                                                VerticalAlignment="Center"
+                                                IsChecked="{Binding Path=EndingDate, Mode=TwoWay}"
+                                            >Дата</RadioButton>
+                                    <DatePicker x:Name="DatPick" Grid.Column="1" Grid.Row="3" 
+                                            Width="0"
+                                            SelectedDateFormat="Short"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource fontSizeLitl}"
+                                            SelectedDate="{Binding Path=EndDateTime, Mode=TwoWay}"
+                                    ></DatePicker>
+                                </Grid>
+
+                            </StackPanel>
+
+                        </Grid>
+                        
+                    </Grid>
+                </Grid>
+
+                <!--Сводная информация-->
+                <TextBlock Grid.Row="1" Height="110"
+                            TextWrapping="Wrap"
+                            Width="600"
+                            Margin="5"
+                            HorizontalAlignment="Left"
+                            Text="{Binding Path=SummaryProb, Mode=OneWay}"
+                            ></TextBlock>
+                    
+                <!--Кнопки-->
+                <StackPanel Grid.Row="2" Orientation="Horizontal" FlowDirection="RightToLeft">
+                    <StackPanel.Resources>
+                        <sys:Double x:Key="H">25</sys:Double>
+                        <sys:Double x:Key="W">75</sys:Double>
+                    </StackPanel.Resources>
+                        
+                    <Button x:Name="ButtonCancel" Style="{StaticResource ButtonMy}"
+                            Height="{StaticResource H}"
+                            Width="{StaticResource W}"
+                            Margin="5"
+                            Content="Отмена"
+                            >
+                        <Button.Triggers>
+                            <EventTrigger RoutedEvent="Button.Click">
+                                <EventTrigger.Actions>
+                                    <BeginStoryboard Storyboard="{StaticResource sbColapsedTaskDetails}">
+                                    </BeginStoryboard>
+                                </EventTrigger.Actions>
+                            </EventTrigger>
+                        </Button.Triggers>
+                    </Button>
+                    <Button x:Name="ButtonOK" Style="{StaticResource ButtonMy}"
+                            Height="{StaticResource H}"
+                            Width="{StaticResource W}"
+                            Margin="5"
+                            Content="OK"
+                            >
+                        <Button.Triggers>
+                            <EventTrigger RoutedEvent="Button.Click">
+                                <EventTrigger.Actions>
+                                    <BeginStoryboard Storyboard="{StaticResource sbColapsedTaskDetails}">
+                                    </BeginStoryboard>
+                                </EventTrigger.Actions>
+                            </EventTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </StackPanel>
+
+            </Grid>
+        </Border>
+
+
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="3" Background="#FF606873">
+
+            <!--<Button Style="{StaticResource ButtonMy}" Click="Button_Click_AddTask">Добавить задачу</Button>-->
+
+            <Button Margin="10,0,0,0" Style="{StaticResource ButtonMy}" Command="{Binding AddProblemCommand}" Content="Добавить задачу">
+                <Button.Triggers>
+                    <EventTrigger RoutedEvent="Button.Click">
+                        <EventTrigger.Actions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation 
+                                        From="0"
+                                        To="700"
+                                        Duration="0:0:1"
+                                        Storyboard.TargetName="BorderTaskDetails" 
+                                        Storyboard.TargetProperty="Width">
+                                    </DoubleAnimation>
+                                    <DoubleAnimation
+                                        From="0"
+                                        To="700"
+                                        Duration="0:0:1"
+                                        Storyboard.TargetName="BorderTaskDetails" 
+                                        Storyboard.TargetProperty="Height">
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.Actions>
+                    </EventTrigger>
+                </Button.Triggers>
+            </Button>
+            <!--<Button Margin="5,0,0,0" Style="{StaticResource ButtonMy}" Command="{Binding RemoveProblemCommand}">Удалить задачу</Button>-->
+            <!--<Button Margin="5,0,0,0" Style="{StaticResource ButtonMy}" Command="{Binding EditProblemComand}">Редактировать задачу</Button>-->
+
+            <!--<TextBox x:Name="TTT" Grid.Row="3" Grid.Column="1" TextWrapping="WrapWithOverflow"/>-->
+            <!--<Button Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="10,6,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>-->
+        </StackPanel>
+
+        <!---->
+
+    </Grid>
+</Window>
